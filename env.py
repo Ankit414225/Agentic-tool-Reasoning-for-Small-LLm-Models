@@ -21,9 +21,6 @@ from typing import Any
 
 import bm25s
 
-# --------------------------------------------------------------------------
-# Wire format  (swap these if the official harness differs)
-# --------------------------------------------------------------------------
 TOOL_CALL_OPEN = "<tool_call>"
 TOOL_CALL_CLOSE = "</tool_call>"
 TOOL_RESP_OPEN = "<tool_response>"
@@ -35,18 +32,13 @@ ANSWER_CLOSE = "</answer>"
 # tool and hand control back to the model.
 STOP_STRINGS = [TOOL_CALL_CLOSE, ANSWER_CLOSE]
 
-# --------------------------------------------------------------------------
-# Budgets
-# --------------------------------------------------------------------------
+
 MAX_TURNS = 7           # assistant turns per episode
 TOP_K = 3               # passages returned per search
 PASSAGE_MAX_CHARS = 100    # truncate each passage
 MAX_NEW_TOKENS_PER_TURN = 320
 MAX_TOTAL_TOKENS = 8192
 
-# --------------------------------------------------------------------------
-# System prompt
-# --------------------------------------------------------------------------
 SYSTEM_PROMPT = f"""You answer questions using a search tool over a document collection.
 
 You have exactly one tool:
@@ -74,9 +66,7 @@ Guidelines:
   best guess rather than searching."""
 
 
-# --------------------------------------------------------------------------
-# Retrieval
-# --------------------------------------------------------------------------
+
 class BM25Tool:
     """BM25 over a candidate set.
 
@@ -150,9 +140,7 @@ def render_error(msg: str) -> str:
     return f"{TOOL_RESP_OPEN}\nERROR: {msg}\n{TOOL_RESP_CLOSE}"
 
 
-# --------------------------------------------------------------------------
-# Parsing model output
-# --------------------------------------------------------------------------
+
 _TOOL_RE = re.compile(
     re.escape(TOOL_CALL_OPEN) + r"(.*?)" + re.escape(TOOL_CALL_CLOSE), re.S
 )
@@ -195,9 +183,8 @@ def parse_turn(text: str) -> TurnParse:
     return TurnParse("malformed", error="no <tool_call> or <answer> tag found")
 
 
-# --------------------------------------------------------------------------
 # Prompt construction
-# --------------------------------------------------------------------------
+
 def build_prompt(tokenizer, question: str) -> str:
     msgs = [
         {"role": "system", "content": SYSTEM_PROMPT},

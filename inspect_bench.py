@@ -67,7 +67,7 @@ import env
 print(f"  env.py currently has MAX_TURNS = {env.MAX_TURNS}", end="")
 print("   <-- TOO LOW, FIX THIS" if env.MAX_TURNS < max_hops + 1 else "   ok")
 
-# ---- context budget at that many turns ----
+#  context budget at that many turns 
 tok_per_passage = sorted(doc_chars)[len(doc_chars)//2] / 4
 obs = env.TOP_K * min(tok_per_passage, env.PASSAGE_MAX_CHARS / 4) + 20
 total = 400 + (max_hops + 3) * (obs + 80)
@@ -78,7 +78,7 @@ print(f"  ~{total:.0f} tokens for a full {max_hops + 3}-turn episode")
 print(f"  env.py MAX_TOTAL_TOKENS = {env.MAX_TOTAL_TOKENS}", end="")
 print("   <-- TOO LOW" if total > env.MAX_TOTAL_TOKENS else "   ok")
 
-# ---- non-multihop examples ----
+# non-multihop examples
 others = [r for r in rows if r.get("category") != "multi_hop_reasoning"]
 if others:
     print(f"\n--- {len(others)} non-multihop rows, first 3 ---")

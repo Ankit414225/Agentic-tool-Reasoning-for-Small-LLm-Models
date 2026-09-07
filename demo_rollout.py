@@ -84,7 +84,7 @@ def main():
     print(f"\nepisode ended: stop_reason={ep.stop_reason}, "
           f"tool_calls={ep.n_tool_calls}, malformed={ep.n_malformed}")
 
-    # ---------------- the mask ----------------
+    #  the mask
     rule("THE LOSS MASK -- the part that decides if training works")
     trainable = tok.decode([t for t, m in zip(ep.token_ids, ep.mask) if m == 1])
     n_tr, n_tot = int(sum(ep.mask)), len(ep.mask)
@@ -106,7 +106,7 @@ def main():
     print("while, then the run rots. This is the single most common bug in")
     print("tool-use RL, so test_local.py asserts on it.")
 
-    # ---------------- a group -> advantages ----------------
+    #  a group -> advantages
     rule("A GROUP OF 8 ROLLOUTS -> GRPO ADVANTAGES")
     groups = generate_episodes(
         MockLLM(tok, "mixed", seed=3, tasks=[task]), tok, [task], BM25Tool(),

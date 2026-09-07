@@ -113,18 +113,18 @@ def main():
     random.seed(a.seed)
     os.makedirs(a.out, exist_ok=True)
 
-    # ---------- 1. the public dev split: eval only, NEVER trained on ----------
+    #1 the public dev split: eval only, NEVER trained on 
     bench = []
     try:
         b = load_dataset(a.bench)
         split = "train" if "train" in b else list(b.keys())[0]
         print(f"benchmark split '{split}': {len(b[split])} rows")
         print(f"columns: {b[split].column_names}")
-        print("\n--- first row ---")
+        print("\n first row")
         r0 = first_row(b[split])
         for k, v in r0.items():
             print(f"{k}: {str(v)[:220]}")
-        print("--- end ---\n")
+        print(" end \n")
         for r in iter_rows(b[split]):
             c = convert(r, "benchmark")
             if c:
@@ -148,7 +148,7 @@ def main():
         print(f"!! could not load {a.bench}: {e}")
         print("   get access to it before training -- everything below is guesswork without it")
 
-    # ---------- 2. proxy training set from MuSiQue (same schema) ----------
+    #  2. proxy training set from MuSiQue (same schema)
     train = []
     try:
         m = load_dataset("dgslibisey/MuSiQue", split="train")
@@ -177,7 +177,7 @@ def main():
     except Exception as e:
         print(f"!! HotpotQA unavailable: {e}")
 
-    # ---------- 3. decontaminate against the dev split ----------
+    #  3. decontaminate against the dev split 
     if bench:
         seen = set()
         for r in bench:
@@ -188,7 +188,7 @@ def main():
     else:
         print("\n!! DECONTAMINATION SKIPPED -- no dev split loaded. Do not ship like this.")
 
-    # ---------- 4. drop rows that give no training signal ----------
+    #  4. drop rows that give no training signal 
     train = [r for r in train
              if r["answer"] and len(r["answer"].split()) <= 8
              and r["answer"].lower() not in ("yes", "no")]

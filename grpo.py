@@ -31,7 +31,7 @@ from reward import RewardConfig, compute_reward, group_advantages, group_is_info
 from rollout import Task, generate_episodes, rollout_stats
 
 
-# ---------------------------------------------------------------- data
+#  data
 def load_tasks(path: str) -> list[Task]:
     tasks = []
     with open(path) as f:
@@ -49,7 +49,7 @@ def load_tasks(path: str) -> list[Task]:
     return tasks
 
 
-# ---------------------------------------------------------------- batching
+#batching
 def collate(episodes, pad_id, device):
     L = max(len(e.token_ids) for e in episodes)
     ids = torch.full((len(episodes), L), pad_id, dtype=torch.long)
@@ -71,7 +71,7 @@ def token_logprobs(model, ids, att):
     return torch.gather(F.log_softmax(logits, -1), 2, tgt.unsqueeze(-1)).squeeze(-1)
 
 
-# ---------------------------------------------------------------- vLLM sync
+# vLLM sync
 def sync_weights(llm, model):
     """Push updated HF weights into the vLLM engine.
 
@@ -85,7 +85,7 @@ def sync_weights(llm, model):
     del sd
 
 
-# ---------------------------------------------------------------- main
+#  main
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--model", default="Qwen/Qwen3-1.7B")
@@ -138,7 +138,7 @@ def main():
     for step in range(args.steps):
         t0 = time.time()
 
-        # ---------- 1. ON-POLICY ROLLOUT ----------
+        #  ON-POLICY ROLLOUT 
         batch_tasks = random.sample(tasks, min(args.prompts_per_step, len(tasks)))
         model.eval()
         with torch.no_grad():
@@ -148,7 +148,7 @@ def main():
             )
         t_roll = time.time() - t0
 
-        # ---------- 2. REWARD ----------
+        #  REWARD 
         train_eps, train_adv, all_r, all_f1 = [], [], [], []
         kept_groups = 0
         for g, task in zip(groups, batch_tasks):
@@ -172,7 +172,7 @@ def main():
             print(f"step {step}: all groups degenerate, skipping")
             continue
 
-        # ---------- 3. OLD LOGPROBS ----------
+        # 3. OLD LOGPROBS 
         # Recompute with the TRAINING model, not vLLM: the two differ
         # numerically and importing vLLM logprobs poisons the ratio.
         order = sorted(range(len(train_eps)), key=lambda i: len(train_eps[i].token_ids))
@@ -190,7 +190,7 @@ def main():
                 ids, att, _ = collate(eps, pad_id, "cuda")
                 old_lp.append(token_logprobs(model, ids, att))
 
-        # ---------- 4. UPDATE ----------
+        # UPDATE 
         model.train()
         # token-level normalisation: every policy token gets equal weight, so
         # long trajectories are not down-weighted relative to short ones
@@ -224,7 +224,7 @@ def main():
 
         sync_weights(llm, model)
 
-        # ---------- 5. LOG ----------
+        #  LOG 
         mean_r = sum(all_r) / len(all_r)
         mean_f1 = sum(all_f1) / len(all_f1)
         log = {
