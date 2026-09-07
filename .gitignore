@@ -1,0 +1,35 @@
+# ---- artifacts: regenerable or too large ----
+data/
+ckpt/
+runs/*
+!runs/.gitkeep
+!runs/results.md
+*.jsonl
+vllm.log
+wandb/
+tb/
+
+# ---- env ----
+.venv/
+venv/
+env/
+.python-version
+
+# ---- python ----
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ---- models / caches ----
+*.safetensors
+*.bin
+*.pt
+.cache/
+huggingface/
+
+# ---- editors / os ----
+.idea/
+.DS_Store
+Thumbs.db

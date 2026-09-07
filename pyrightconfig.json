@@ -1,0 +1,6 @@
+{
+  "typeCheckingMode": "basic",
+  "reportMissingImports": "none",
+  "_comment": "torch and vllm are GPU-only (requirements-gpu.txt) and are not installed on laptops. Suppressing the import errors keeps the Problems panel meaningful instead of full of expected noise.",
+  "exclude": ["**/__pycache__", ".venv", "data", "ckpt", "runs"]
+}

@@ -1,0 +1,48 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "demo_rollout (CPU)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "demo_rollout.py",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "test_local (CPU)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "test_local.py",
+      "console": "integratedTerminal",
+      "justMyCode": false
+    },
+    {
+      "name": "dataset.py",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "dataset.py",
+      "args": ["--bench", "YashBhamare123/tools-benchmark", "--out", "data"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "eval.py (needs GPU)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "eval.py",
+      "args": ["--model", "Qwen/Qwen3-1.7B", "--data", "data/dev_benchmark.jsonl",
+               "--limit", "200", "--dump", "runs/base.jsonl"],
+      "console": "integratedTerminal"
+    },
+    {
+      "name": "grpo.py (needs GPU)",
+      "type": "debugpy",
+      "request": "launch",
+      "program": "grpo.py",
+      "args": ["--model", "Qwen/Qwen3-1.7B", "--data", "data/train.jsonl",
+               "--out", "ckpt/run1"],
+      "console": "integratedTerminal",
+      "justMyCode": false
+    }
+  ]
+}

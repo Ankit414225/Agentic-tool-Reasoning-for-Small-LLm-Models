@@ -1,0 +1,7 @@
+# Laptop / VS Code -- CPU only, no GPU needed.
+# Enough for: data prep, schema inspection, BM25, reward, rollout logic, tests.
+bm25s>=0.2
+PyStemmer
+transformers>=4.51
+datasets>=2.20
+tokenizers>=0.20

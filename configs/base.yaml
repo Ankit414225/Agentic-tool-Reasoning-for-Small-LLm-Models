@@ -1,0 +1,36 @@
+# Frozen environment config. Committed so there is a record of what was frozen.
+# env.py is the source of truth at runtime -- this file documents it and is what
+# you share with the eval owner to confirm both sides match.
+
+environment:
+  tool: bm25_search_only        # calculator dropped per club head
+  bm25:
+    k1: 1.5
+    b: 0.75
+    top_k: 4
+    stopwords: en
+  passage_max_chars: 600
+  passage_format: "Title: {title}\n{body}"   # matches the team's eval harness
+  max_turns: 4
+  max_new_tokens_per_turn: 320
+  max_total_tokens: 3072
+  wire_format:
+    tool_call: '<tool_call>{"name":"search","arguments":{"query":"..."}}</tool_call>'
+    tool_response: '<tool_response>...</tool_response>'
+    answer: '<answer>...</answer>'
+
+scoring:
+  primary: token_f1             # benchmark metric
+  also_report: exact_match
+  # NOT substring containment -- that overestimates and hides answer-length wins
+
+data:
+  benchmark: YashBhamare123/tools-benchmark   # dev split, EVAL ONLY
+  train_sources: [musique, hotpotqa]
+  candidate_docs: per_question  # confirmed from row['context'] in team eval.py
+  decontamination: 8gram_question_overlap
+  min_hops: 2
+
+models:
+  dev: Qwen/Qwen3-1.7B
+  final: Qwen/Qwen3-4B

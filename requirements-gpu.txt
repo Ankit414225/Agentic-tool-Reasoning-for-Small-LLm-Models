@@ -1,0 +1,7 @@
+# Cloud GPU only. Install AFTER requirements-local.txt.
+-r requirements-local.txt
+torch>=2.4
+vllm>=0.8.5
+accelerate
+tensorboard
+flash-attn>=2.6
