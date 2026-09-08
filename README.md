@@ -53,6 +53,7 @@ Then:
 ```bash
 python dataset.py --out data --n_train 30000
 python balance_data.py
+python resplit.py --val_per_hop 120
 ```
 
 This downloads MuSiQue and HotpotQA (a few GB, 10 to 20 minutes the first time),
